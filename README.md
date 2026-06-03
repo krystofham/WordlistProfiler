@@ -39,7 +39,20 @@ You can have leetspeak (optional).
 ## Weight system
 In the () are written numbers, that represent weight.
 ### File size by points
+No leetcode, highly expected values
 #### 2 words
-Table of weight count, possible words, expected size, no leetspeak, no custom keywords
-vygeneruj jenom tabulku pro dve slova podle parametru presne. Skore pro <= 10,15,20,25. to stejne i pro 3 slova
+| Score | Approx rows | Approx size |
+|---|---|---|
+| ≤10 | 0 | 0 B |
+| ≤15 | ~2 106 | ~42 KB |
+| ≤20 | ~18 000 | ~360 KB |
+| ≤25 | ~134 784 | ~2.7 MB |
+
 #### 3 words
+
+| Score | Approx rows | Approx size |
+|---|---|---|
+| ≤10 | ~324 | ~8 KB |
+| ≤15 | ~2 500 | ~60 KB |
+| ≤20 | ~1 161 216 | ~23 MB |
+| ≤25 | ~5 930 496 | ~119 MB |
