@@ -160,15 +160,6 @@ void run_password_generator(int word_count, WeightedWord all_keys[ALL_KEYS_COUNT
     total_bytes = 0;
     
     generate_rec(0, word_count, 0, max_allowed_weight, "", all_keys, all_words);
-    
-    printf("\n--- STATS (%d Word%s) ---\n", word_count, word_count > 1 ? "s" : "");
-    printf("Total passwords: %lld\n", total_words);
-    printf("Total size: %lld Bytes\n", total_bytes);
-    printf("Total size: %lld bits\n", total_bytes * 8);
-    if (total_words > 0) {
-        double avg_bytes = (double)total_bytes / total_words;
-        printf("Avg size per word: %.2f Bytes (%.2f bits)\n", avg_bytes, avg_bytes * 8);
-    }
 }
 
 int main() {
