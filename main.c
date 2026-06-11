@@ -6,7 +6,7 @@
 #define ALL_KEYS_COUNT 10
 #define ALL_TOKENS_COUNT 10
 
-int mode = 3;
+int mode = 2;
 
 typedef struct {
     char value[MAX_WORD_LEN];
@@ -149,11 +149,11 @@ void run_password_generator(int word_count, WeightedWord all_keys[ALL_KEYS_COUNT
     int max_allowed_weight = 100; // Výchozí pro 3 slova, mód 3
     
     if (word_count == 1) {
-        max_allowed_weight = (mode == 2) ? 15 : ((mode == 3) ? 105 : 10);
+        max_allowed_weight = (mode == 2) ? 15 : ((mode == 3) ? 20 : 10);
     } else if (word_count == 2) {
-        max_allowed_weight = (mode == 2) ? 20 : ((mode == 3) ? 105 : 18);
+        max_allowed_weight = (mode == 2) ? 20 : ((mode == 3) ? 25 : 18);
     } else if (word_count == 3) {
-        max_allowed_weight = (mode == 2) ? 25 : ((mode == 3) ? 100 : 20);
+        max_allowed_weight = (mode == 2) ? 25 : ((mode == 3) ? 30 : 20);
     }
     
     total_words = 0;
