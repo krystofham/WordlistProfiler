@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int mode = 2; 
+int mode = 3; 
 
 typedef struct {
     char value[50];
@@ -144,7 +144,7 @@ void OneWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
                 
                 int max_allowed_weight = 10;
                 if (mode == 2) max_allowed_weight = 15;
-                if (mode == 3) max_allowed_weight = 25;
+                if (mode == 3) max_allowed_weight = 105;
 
                 if (value <= max_allowed_weight) {
                     char key[200] = "";
@@ -152,7 +152,7 @@ void OneWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
                     strcat(key, all_words[b].value);
                     strcat(key, all_keys[c].value);
                     
-                    printf("%s\n", key);
+                    // printf("%s\n", key);
                     
                     total_words++;
                     total_bytes += strlen(key) + 1;
@@ -186,7 +186,7 @@ void TwoWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
                         
                         int max_allowed_weight = 18;
                         if (mode == 2) max_allowed_weight = 20;
-                        if (mode == 3) max_allowed_weight = 25;
+                        if (mode == 3) max_allowed_weight = 105;
 
                         if (value <= max_allowed_weight) {
                             char key[200] = "";
@@ -195,7 +195,7 @@ void TwoWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
                             strcat(key, all_keys[c].value);
                             strcat(key, all_words[d].value);
                             strcat(key, all_keys[e].value);
-                            printf("%s\n", key);
+                            // printf("%s\n", key);
                             
                             total_words++;
                             total_bytes += strlen(key) + 1;
@@ -216,10 +216,80 @@ void TwoWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
     }
 }
 
+void ThreeWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
+    int value;
+    long long total_words = 0;
+    long long total_bytes = 0;
+
+    for (int a = 0; a < 10; a++) {
+        for (int b = 0; b < 10; b++) {
+            for (int c = 0; c < 10; c++) {
+                for (int d = 0; d < 10; d++) {
+                    for (int e = 0; e < 10; e++) {
+                        for (int f = 0; f < 10; f++) {
+                            for (int g = 0; g < 10; g++) {
+                                value = all_keys[a].weight + (all_words[b].weight * 2) + all_keys[c].weight + (all_words[d].weight * 2) + all_keys[e].weight + (all_words[f].weight * 2) + all_keys[g].weight;
+                                char word1[50], word2[50], word3[50];
+                                strcpy(word1, all_words[b].value);
+                                strcpy(word2, all_words[d].value);
+                                strcpy(word3, all_words[f].value);
+
+                                char key1[200] = "";
+                                sprintf(key1, "%s%s%s%s%s%s%s", all_keys[a].value, word1, all_keys[c].value, word2, all_keys[e].value, word3, all_keys[g].value);
+
+                                if (word1[0] >= 'a' && word1[0] <= 'z') word1[0] -= 32; 
+                                if (word2[0] >= 'a' && word2[0] <= 'z') word2[0] -= 32;
+                                if (word3[0] >= 'a' && word3[0] <= 'z') word3[0] -= 32;
+
+                                char key2[200] = "";
+                                sprintf(key2, "%s%s%s%s%s%s%s", all_keys[a].value, word1, all_keys[c].value, word2, all_keys[e].value, word3, all_keys[g].value);
+
+                                for (int i = 0; word1[i] != '\0'; i++) {
+                                    if (word1[i] >= 'a' && word1[i] <= 'z') word1[i] -= 32;
+                                }
+                                for (int i = 0; word2[i] != '\0'; i++) {
+                                    if (word2[i] >= 'a' && word2[i] <= 'z') word2[i] -= 32;
+                                }
+                                for (int i = 0; word3[i] != '\0'; i++) {
+                                    if (word3[i] >= 'a' && word3[i] <= 'z') word3[i] -= 32;
+                                }
+
+                                char key3[200] = "";
+                                sprintf(key3, "%s%s%s%s%s%s%s", all_keys[a].value, word1, all_keys[c].value, word2, all_keys[e].value, word3, all_keys[g].value);
+
+                                int max_allowed_weight = 20;
+                                if (mode == 2) max_allowed_weight = 25;
+                                if (mode == 3) max_allowed_weight = 100;
+
+                                if (value <= max_allowed_weight) {
+                                    printf("%s \n %s \n %s", key1, key2, key3);
+                                    // printf("%s\n", key3);
+                                    
+                                    total_words += 3;
+                                    total_bytes += (strlen(key1) + 1) + (strlen(key2) + 1) + (strlen(key3) + 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    printf("\n--- STATS ---\n");
+    printf("Total passwords: %lld\n", total_words);
+    printf("Total size: %lld Bytes\n", total_bytes);
+    printf("Total size: %lld bits\n", total_bytes * 8);
+    if (total_words > 0) {
+        double avg_bytes = (double)total_bytes / total_words;
+        printf("Avg size per word: %.2f Bytes (%.2f bits)\n", avg_bytes, avg_bytes * 8);
+    }
+}
 
 
 
 int main() {
+    printf("ZADAVEJ JENOM MALE PISMENA\n");
     human target = scanfortokens();
     keys primary_keys = scanforkeys();
     
