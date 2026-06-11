@@ -171,6 +171,54 @@ void OneWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
     }
 }
 
+
+void TwoWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
+    int value;
+    long long total_words = 0;
+    long long total_bytes = 0;
+
+    for (int a = 0; a < 10; a++) {
+        for (int b = 0; b < 10; b++) {
+            for (int c = 0; c < 10; c++) {
+                for (int d = 0; d < 10; d++) {
+                    for (int e = 0; e < 10; e++) {
+                        value = all_keys[a].weight + (all_words[b].weight * 2) + all_keys[c].weight + (all_words[d].weight * 2) + all_keys[e].weight;
+                        
+                        int max_allowed_weight = 18;
+                        if (mode == 2) max_allowed_weight = 20;
+                        if (mode == 3) max_allowed_weight = 25;
+
+                        if (value <= max_allowed_weight) {
+                            char key[200] = "";
+                            strcat(key, all_keys[a].value);
+                            strcat(key, all_words[b].value);
+                            strcat(key, all_keys[c].value);
+                            strcat(key, all_words[d].value);
+                            strcat(key, all_keys[e].value);
+                            printf("%s\n", key);
+                            
+                            total_words++;
+                            total_bytes += strlen(key) + 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    printf("\n--- STATS ---\n");
+    printf("Total passwords: %lld\n", total_words);
+    printf("Total size: %lld Bytes\n", total_bytes);
+    printf("Total size: %lld bits\n", total_bytes * 8);
+    if (total_words > 0) {
+        double avg_bytes = (double)total_bytes / total_words;
+        printf("Avg size per word: %.2f Bytes (%.2f bits)\n", avg_bytes, avg_bytes * 8);
+    }
+}
+
+
+
+
 int main() {
     human target = scanfortokens();
     keys primary_keys = scanforkeys();
@@ -191,5 +239,6 @@ int main() {
     ConvertStructHumanToField(target, all_tokens);
 
     OneWordPrint(all_keys, all_tokens);
+    TwoWordPrint(all_keys, all_tokens);
     return 0;
 }
