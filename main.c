@@ -34,30 +34,6 @@ typedef struct {
     WeightedWord nine;
 } keys;
 
-typedef struct {
-    keys FirstKeys;
-    human FirstWord;
-    keys SecondKeys;
-    human SecondWord;
-    keys ThirdKeys;
-    human ThirdWord;
-    keys FourthKeys;
-} ThreeWords;
-
-typedef struct {
-    keys FirstKeys;
-    human FirstWord;
-    keys SecondKeys;
-    human SecondWord;
-    keys ThirdKeys;
-} TwoWords;
-
-typedef struct {
-    keys FirstKeys;
-    human FirstWord;
-    keys SecondKeys;
-} OneWord;
-
 human scanfortokens () {
     human target;
 
@@ -139,8 +115,27 @@ keys scanforkeys() {
     return my_keys;
 }
 
+void ConvertStructHumanToField(human target, WeightedWord all_words[10]) {
+    all_words[0] = target.name;
+    all_words[1] = target.surname;
+    all_words[2] = target.pet;
+    all_words[3] = target.team;
+    all_words[4] = target.car;
+    all_words[5] = target.american_spell;
+    all_words[6] = target.european_spell;
+    all_words[7] = target.short_spell;
+
+    strcpy(all_words[8].value, target.key_id);
+    all_words[8].weight = 1;
+
+    strcpy(all_words[9].value, target.key_id2);
+    all_words[9].weight = 1;
+}
+
 void OneWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
     int value;
+    long long total_words = 0;
+    long long total_bytes = 0;
 
     for (int a = 0; a < 10; a++) {
         for (int b = 0; b < 10; b++) {
@@ -156,10 +151,23 @@ void OneWordPrint(WeightedWord all_keys[10], WeightedWord all_words[10]) {
                     strcat(key, all_keys[a].value);
                     strcat(key, all_words[b].value);
                     strcat(key, all_keys[c].value);
+                    
                     printf("%s\n", key);
+                    
+                    total_words++;
+                    total_bytes += strlen(key) + 1;
                 }
             }
         }
+    }
+
+    printf("\n--- STATS ---\n");
+    printf("Total passwords: %lld\n", total_words);
+    printf("Total size: %lld Bytes\n", total_bytes);
+    printf("Total size: %lld bits\n", total_bytes * 8);
+    if (total_words > 0) {
+        double avg_bytes = (double)total_bytes / total_words;
+        printf("Avg size per word: %.2f Bytes (%.2f bits)\n", avg_bytes, avg_bytes * 8);
     }
 }
 
@@ -180,20 +188,7 @@ int main() {
     all_keys[9] = primary_keys.nine;
 
     WeightedWord all_tokens[10];
-    all_tokens[0] = target.name;
-    all_tokens[1] = target.surname;
-    all_tokens[2] = target.pet;
-    all_tokens[3] = target.team;
-    all_tokens[4] = target.car;
-    all_tokens[5] = target.american_spell;
-    all_tokens[6] = target.european_spell;
-    all_tokens[7] = target.short_spell;
-
-    strcpy(all_tokens[8].value, target.key_id);
-    all_tokens[8].weight = 1;
-
-    strcpy(all_tokens[9].value, target.key_id2);
-    all_tokens[9].weight = 1;
+    ConvertStructHumanToField(target, all_tokens);
 
     OneWordPrint(all_keys, all_tokens);
     return 0;
