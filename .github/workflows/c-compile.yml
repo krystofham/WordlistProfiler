@@ -1,6 +1,5 @@
 name: C Kompilace Test
 
-# Akce se spustí při každém pushnutí kódu nebo vytvoření pull requestu do hlavní větve
 on:
   push:
     branches: [ "main", "master" ]
@@ -9,23 +8,14 @@ on:
 
 jobs:
   build:
-    # Kompilovat budeme na virtuálním stroji s Ubuntu Linuxem
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Krok: Stáhne tvůj kód z GitHubu do virtuálního stroje
     - name: Stáhnout kód z repozitáře
       uses: actions/checkout@v4
 
-    # 2. Krok: Zkontroluje a případně nainstaluje GCC kompilátor (Ubuntu ho má v základu)
     - name: Ověřit instalaci GCC
       run: gcc --version
 
-    # 3. Krok: Samotná kompilace tvého programu
-    - name: Kompilace programu main.c
-      run: gcc main.c -o muj_program
-
-    # 4. Krok: Volitelný test - zkusíme program rovnou spustit, zda nespadne
-    # (Pokud tvůj program vyžaduje uživatelský vstup jako scanf, tento krok raději smaž)
-    - name: Spuštění testu programu
-      run: ./muj_program
+    - name: Compilation of main.c
+      run: gcc main.c -o wordlist_profiler
