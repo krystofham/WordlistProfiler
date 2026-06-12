@@ -6,7 +6,9 @@
 #define ALL_KEYS_COUNT 10
 #define ALL_TOKENS_COUNT 10
 
-int mode = 2;
+
+int mode;
+
 
 typedef struct {
     char value[MAX_WORD_LEN];
@@ -161,6 +163,12 @@ void run_password_generator(int word_count, WeightedWord all_keys[ALL_KEYS_COUNT
 }
 
 int main() {
+    printf("Enter generator mode (e.g. 1/2/3): \n");
+    if (scanf("%d", &mode) != 1) {
+        printf("Neplatný vstup!\n");
+        return 1;
+    }
+
     printf("Enter lower case only\n");
     human target = scanfortokens();
     
@@ -170,7 +178,7 @@ int main() {
     WeightedWord all_tokens[ALL_TOKENS_COUNT];
     convert_human_to_array(target, all_tokens);
     
-    fptr = fopen("passwords.txt", "w"); // "w" přepisuje starý soubor, změň na "a" pokud chceš pokaždé navazovat
+    fptr = fopen("passwords.txt", "w");
     if (fptr == NULL) {
         printf("Chyba při otevírání souboru pro zápis!\n");
         return 1;
