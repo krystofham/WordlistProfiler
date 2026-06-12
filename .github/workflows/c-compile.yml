@@ -1,21 +1,32 @@
-name: C Kompilace Test
+name: WordlistProfiler Release
 
+# This workflow triggers only when you push a version tag (e.g., v1.0.0)
 on:
   push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  build_and_release:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
-    - name: Stáhnout kód z repozitáře
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Ověřit instalaci GCC
-      run: gcc --version
+    - name: Compile WordlistProfiler
+      run: gcc main.c -o wordlistprofiler
 
-    - name: Compilation of main.c
-      run: gcc main.c -o wordlist_profiler
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: wordlistprofiler  # The exact file to attach to the Release
+        name: WordlistProfiler ${{ github.ref_name }}
+        tag_name: ${{ github.ref }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
