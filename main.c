@@ -29,6 +29,8 @@ typedef struct {
 long long total_words = 0;
 long long total_bytes = 0;
 
+FILE *fptr = NULL;
+
 human scanfortokens() {
     human target;
     target.name.weight = 1;
@@ -97,14 +99,14 @@ void capitalize_word(char *dest, const char *src) {
 }
 
 void print_and_count(const char *password) {
-    printf("%s\n", password);
-    total_words++;
-    total_bytes += strlen(password) + 1; // +1 za znak \n
+    if (fptr != NULL) {
+        fprintf(fptr, "%s\n", password);
+        total_words++;
+        total_bytes += strlen(password) + 1;
+    }
 }
 
-
 void generate_rec(int current_depth, int target_depth, int current_weight, int max_weight, const char *prefix, WeightedWord all_keys[ALL_KEYS_COUNT], WeightedWord all_words[ALL_TOKENS_COUNT]) {
-    
     for (int k = 0; k < ALL_KEYS_COUNT; k++) {
         int weight_with_key = current_weight + all_keys[k].weight;
         
@@ -120,7 +122,6 @@ void generate_rec(int current_depth, int target_depth, int current_weight, int m
         
         for (int w = 0; w < ALL_TOKENS_COUNT; w++) {
             int next_weight = weight_with_key + (all_words[w].weight * 2);
-            
             if (next_weight > max_weight) continue;
             
             char word_lower[MAX_WORD_LEN];
@@ -146,7 +147,7 @@ void generate_rec(int current_depth, int target_depth, int current_weight, int m
 }
 
 void run_password_generator(int word_count, WeightedWord all_keys[ALL_KEYS_COUNT], WeightedWord all_words[ALL_TOKENS_COUNT]) {
-    int max_allowed_weight = 100; // Výchozí pro 3 slova, mód 3
+    int max_allowed_weight = 100;
     
     if (word_count == 1) {
         max_allowed_weight = (mode == 2) ? 15 : ((mode == 3) ? 20 : 10);
@@ -155,9 +156,6 @@ void run_password_generator(int word_count, WeightedWord all_keys[ALL_KEYS_COUNT
     } else if (word_count == 3) {
         max_allowed_weight = (mode == 2) ? 25 : ((mode == 3) ? 30 : 20);
     }
-    
-    total_words = 0;
-    total_bytes = 0;
     
     generate_rec(0, word_count, 0, max_allowed_weight, "", all_keys, all_words);
 }
@@ -172,9 +170,20 @@ int main() {
     WeightedWord all_tokens[ALL_TOKENS_COUNT];
     convert_human_to_array(target, all_tokens);
     
+    fptr = fopen("passwords.txt", "w"); // "w" přepisuje starý soubor, změň na "a" pokud chceš pokaždé navazovat
+    if (fptr == NULL) {
+        printf("Chyba při otevírání souboru pro zápis!\n");
+        return 1;
+    }
+    
+    printf("Generuji hesla...\n");
     run_password_generator(1, all_keys, all_tokens);
     run_password_generator(2, all_keys, all_tokens);
     run_password_generator(3, all_keys, all_tokens);
+    
+    fclose(fptr);
+    
+    printf("Hotovo! Vygenerováno %lld hesel (%lld bajtů).\n", total_words, total_bytes);
     
     return 0;
 }
